@@ -1,0 +1,7 @@
+{
+  "model": "Logistic Regression",
+  "params": {
+    "model__C": 100
+  },
+  "cv_auc": 0.9584554032751452
+}

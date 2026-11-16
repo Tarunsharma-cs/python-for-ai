@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* ---------- Page ---------- */
+html, body, [class*="css"], [data-testid="stAppViewContainer"] * {
+    font-family: 'Poppins', sans-serif;
+}
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 50%, #ecfeff 100%);
+}
+header[data-testid="stHeader"] { background: transparent; }
+#MainMenu, footer { visibility: hidden; }
+.block-container { padding-top: 2rem; max-width: 960px; }
+
+/* ---------- Hero banner ---------- */
+.hero {
+    background: linear-gradient(120deg, #4f46e5 0%, #0ea5e9 60%, #06b6d4 100%);
+    color: #ffffff;
+    border-radius: 22px;
+    padding: 2.2rem 2rem;
+    margin-bottom: 1.6rem;
+    box-shadow: 0 18px 40px rgba(79, 70, 229, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+.hero::after {
+    content: "";
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 220px; height: 220px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+}
+.hero h1 { margin: 0; font-size: 2rem; font-weight: 700; color: #ffffff; }
+.hero p  { margin: 0.5rem 0 0; font-size: 1rem; opacity: 0.92; color: #ffffff; }
+.hero .badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    padding: 0.2rem 0.8rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    margin-bottom: 0.8rem;
+}
+
+/* ---------- Section titles ---------- */
+.section-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0.4rem 0 0.8rem;
+    padding-left: 0.7rem;
+    border-left: 4px solid #4f46e5;
+}
+
+/* ---------- Inputs ---------- */
+[data-testid="stWidgetLabel"] p { font-weight: 600; color: #334155; font-size: 0.9rem; }
+[data-baseweb="select"] > div,
+[data-testid="stNumberInput"] input {
+    border-radius: 12px !important;
+    border: 1.5px solid #e2e8f0 !important;
+    background: #ffffff !important;
+}
+[data-baseweb="select"] > div:hover,
+[data-testid="stNumberInput"] input:focus { border-color: #6366f1 !important; }
+
+/* ---------- Predict button ---------- */
+.stButton > button {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(120deg, #4f46e5, #0ea5e9);
+    box-shadow: 0 10px 24px rgba(79, 70, 229, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(79, 70, 229, 0.4);
+    color: #ffffff;
+}
+.stButton > button:active { transform: translateY(0); }
+
+/* ---------- Result card ---------- */
+.result-card {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    border-radius: 20px;
+    padding: 1.4rem 1.6rem;
+    margin-top: 1.4rem;
+    color: #ffffff;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18);
+    animation: pop 0.35s ease;
+}
+.result-card.delayed { background: linear-gradient(120deg, #ef4444, #f97316); }
+.result-card.ontime  { background: linear-gradient(120deg, #10b981, #06b6d4); }
+.result-icon  { font-size: 2.6rem; line-height: 1; }
+.result-body  { flex: 1; }
+.result-label { font-size: 1.45rem; font-weight: 700; }
+.result-sub   { font-size: 0.85rem; opacity: 0.92; }
+.result-pct   { font-size: 2.6rem; font-weight: 700; }
+
+@keyframes pop {
+    from { opacity: 0; transform: translateY(10px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---------- Probability gauge ---------- */
+.gauge { margin: 1.2rem 0 0.4rem; }
+.gauge-track {
+    position: relative;
+    height: 14px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #10b981 0%, #facc15 50%, #ef4444 100%);
+}
+.gauge-marker {
+    position: absolute;
+    top: -6px;
+    width: 26px; height: 26px;
+    margin-left: -13px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 4px solid #1e293b;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+.gauge-scale {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 0.7rem;
+}
+
+/* ---------- Risk factor chips ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
+.chip {
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+.chip.bad  { background: #fee2e2; color: #b91c1c; }
+.chip.good { background: #d1fae5; color: #047857; }
+
+/* ---------- Sidebar ---------- */
+[data-testid="stSidebar"] { background: #ffffff; border-right: 1px solid #e2e8f0; }
+.side-title { font-weight: 700; font-size: 1.1rem; color: #1e293b; margin-bottom: 0.2rem; }
+.side-sub   { font-size: 0.8rem; color: #64748b; margin-bottom: 1rem; }
+.tile-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+.tile {
+    background: linear-gradient(135deg, #eef2ff, #f0f9ff);
+    border-radius: 14px;
+    padding: 0.8rem;
+    text-align: center;
+}
+.tile .value { font-size: 1.3rem; font-weight: 700; color: #4f46e5; }
+.tile .name  { font-size: 0.72rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ---------- Footer ---------- */
+.app-footer {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    margin-top: 2.2rem;
+}
