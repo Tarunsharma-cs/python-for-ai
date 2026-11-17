@@ -1,8 +1,9 @@
-"""Step 8 (optional): Streamlit web app with custom HTML + CSS.
+"""Step 8: Streamlit web app - cinematic dark theme with animations.
 
 Run from the project folder:  streamlit run app/app.py
 """
 import json
+import time
 from pathlib import Path
 
 import joblib
@@ -27,12 +28,24 @@ def html(markup: str) -> None:
     st.markdown(markup, unsafe_allow_html=True)
 
 
+# ---------- Splash intro (only on the first load of a session) ----------
+if "splash_done" not in st.session_state:
+    st.session_state["splash_done"] = True
+    html(
+        '<div class="splash">'
+        '<div class="splash-logo">DELIVERY<span>AI</span></div>'
+        '<div class="splash-truck">🚚💨</div>'
+        '<div class="splash-bar"></div>'
+        "</div>"
+    )
+
 # ---------- Hero banner ----------
 html(
     '<div class="hero">'
     '<div class="badge">🚚 Transport &amp; Logistics · Machine Learning</div>'
     "<h1>Delivery Delay Predictor</h1>"
     "<p>Enter the delivery details and find out whether it is likely to arrive on time.</p>"
+    '<div class="road"></div><div class="truck">🚚</div>'
     "</div>"
 )
 
@@ -60,9 +73,9 @@ with st.sidebar:
             f'<div class="side-sub">{model_name}, tested on unseen data</div>'
             '<div class="tile-grid">'
             f'<div class="tile"><div class="value">{metrics["accuracy"]:.1%}</div><div class="name">Accuracy</div></div>'
-            f'<div class="tile"><div class="value">{metrics["precision"]:.1%}</div><div class="name">Precision</div></div>'
-            f'<div class="tile"><div class="value">{metrics["recall"]:.1%}</div><div class="name">Recall</div></div>'
-            f'<div class="tile"><div class="value">{metrics["roc_auc"]:.3f}</div><div class="name">ROC-AUC</div></div>'
+            f'<div class="tile" style="animation-delay:.1s"><div class="value">{metrics["precision"]:.1%}</div><div class="name">Precision</div></div>'
+            f'<div class="tile" style="animation-delay:.2s"><div class="value">{metrics["recall"]:.1%}</div><div class="name">Recall</div></div>'
+            f'<div class="tile" style="animation-delay:.3s"><div class="value">{metrics["roc_auc"]:.3f}</div><div class="name">ROC-AUC</div></div>'
             "</div>"
         )
     else:
@@ -81,7 +94,7 @@ with col2:
     priority = st.selectbox("📦 Delivery priority", ["Low", "Standard", "Express"])
 
 st.write("")
-predict = st.button("Predict delivery status")
+predict = st.button("🚀 Predict delivery status")
 
 
 def risk_factors(distance, traffic, weather, rating, priority):
@@ -102,27 +115,32 @@ def risk_factors(distance, traffic, weather, rating, priority):
 
 # ---------- Prediction ----------
 if predict:
-    row = pd.DataFrame(
-        [
-            {
-                "distance_km": distance,
-                "driver_rating": rating,
-                "vehicle_type": vehicle,
-                "traffic_level": traffic,
-                "weather_condition": weather,
-                "delivery_priority": priority,
-            }
-        ]
-    )
-    prob = float(model.predict_proba(row)[0, 1])
+    with st.spinner("Analysing route, weather and traffic..."):
+        time.sleep(0.8)  # short pause so the result animation feels like a reveal
+        row = pd.DataFrame(
+            [
+                {
+                    "distance_km": distance,
+                    "driver_rating": rating,
+                    "vehicle_type": vehicle,
+                    "traffic_level": traffic,
+                    "weather_condition": weather,
+                    "delivery_priority": priority,
+                }
+            ]
+        )
+        prob = float(model.predict_proba(row)[0, 1])
+
     pct = round(prob * 100)
     delayed = prob >= 0.5
 
     css_class = "delayed" if delayed else "ontime"
     icon = "⚠️" if delayed else "✅"
     label = "Likely DELAYED" if delayed else "Likely ON TIME"
-    chips = "".join(f'<span class="chip {kind}">{text}</span>' for text, kind in
-                    risk_factors(distance, traffic, weather, rating, priority))
+    chips = "".join(
+        f'<span class="chip {kind}" style="animation-delay:{0.5 + i * 0.15:.2f}s">{text}</span>'
+        for i, (text, kind) in enumerate(risk_factors(distance, traffic, weather, rating, priority))
+    )
 
     html(
         f'<div class="result-card {css_class}">'
@@ -132,10 +150,12 @@ if predict:
         f'<div class="result-pct">{pct}%</div>'
         "</div>"
         '<div class="gauge"><div class="gauge-track">'
-        f'<div class="gauge-marker" style="left:{pct}%"></div></div>'
+        f'<div class="gauge-marker" style="--p:{pct}%"></div></div>'
         '<div class="gauge-scale"><span>On time</span><span>Uncertain</span><span>Delayed</span></div></div>'
         '<div class="section-title" style="margin-top:1.2rem">What affects this delivery</div>'
         f'<div class="chips">{chips}</div>'
     )
+    if not delayed:
+        st.balloons()
 
 html('<div class="app-footer">Field Project · Transport &amp; Logistics · built with scikit-learn and Streamlit</div>')
